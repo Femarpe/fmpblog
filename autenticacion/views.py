@@ -6,11 +6,11 @@ from django.shortcuts import render, redirect
 # clase vista de django
 from django.views.generic import View
 # formulario que provee django
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 # nos permite crear sesiones flash
 from django.contrib import messages
 # funciones de login - identificacion usuario
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 
 
 # la clase ViewRegistre está heredando de la clase View
@@ -46,7 +46,36 @@ class ViewRegistre(View):
             # si hay errores nos quedaremos en el formulario de registro
             return render(request, "registro.html", {"form": form})
 
-    def cerrar_sesion(request):
-        logout(request)
-        messages.success(request, "Tu sesión se ha cerrado")
-        return redirect("blog")
+
+
+def cerrar_sesion(request):
+    logout(request)
+    messages.success(request, "Tu sesión se ha cerrado")
+    return redirect("blog")
+
+
+def acceder(request):
+        # procesado del formulario de login
+        if request.method == "POST":
+            # cogemos los datos
+            form = AuthenticationForm(request, data=request.POST)
+            # si los datos son válidos
+            if form.is_valid():
+                nombre_user = form.cleaned_data.get("username")
+                password = form.cleaned_data.get("password")
+                # autenticamos si el usuario es válido y para ello django nos suministra authenticate
+                usuario = authenticate(username=nombre_user, password=password)
+                # si el usuario existe
+                if usuario is not None:
+                    login(request, usuario)
+                    messages.success(request, F"Bienvenid@ de nuevo {nombre_user}")
+                    return redirect("blog")
+                # si las credenciales no son correctas
+                else:
+                    messages.error(request, "Los datos son incorrectos")
+            # si el formulario no se ha validado correctamente
+            else:
+                messages.error(request, "Los datos son incorrectos")
+
+        form = AuthenticationForm()
+        return render(request, "acceder.html", {"form": form})

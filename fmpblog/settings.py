@@ -138,3 +138,6 @@ MESSAGE_TAGS = {
 
 # template formularios bootstrap 4
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
