@@ -15,8 +15,11 @@ Including another URLconf
 """
 from django.urls import path, include
 from .views import *
-
+from .views import index
 urlpatterns = [
-    path('hola-django/', hola, name="hola"),
-    path('acounts/', include("autenticacion.urls")),
+    path('hola-django/', index, name="hola"),
+    path('accounts/', include("autenticacion.urls")),
+    path('', index, name="blog")
+
 ]
+

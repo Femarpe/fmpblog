@@ -1,1 +1,13 @@
 {% extends 'base.html' %}
+#sobreescribimos el bloque title de la plantilla base
+{% block title %}Registro{% endblock %}
+{% load crispy_forms_tags %}
+{% block content %}
+<!-- formulario de envío de datos con autocompletar desactivado y margin-top de 2-->
+<form method="POST" action="" class="mt-2" autocomplete="off">
+    {% csrf_token %} <!--validación autenticacion-->
+    {{ form|crispy }} <!--hace referencia a la etiqueta del diccionario de views.py "form": form-->
+    <!-- botón de envío de formulario de Bootstrap -->
+    <button type="submit" class="btn btn-success">Crear cuenta!</button>
+</form>
+{% endblock %}
